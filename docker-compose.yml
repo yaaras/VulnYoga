@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  vulnyoga:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: vulnyoga-api
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATABASE_URL=file:./yogastore.db
+      - JWT_SECRET=dev-weak-secret-change-in-production
+      - JWT_EXPIRES_IN=24h
+      - CORS_ORIGIN=*
+      - VULN_API1_BOLA=true
+      - VULN_API2_BROKEN_AUTH=true
+      - VULN_API3_BOPLA=true
+      - VULN_API4_RESOURCE=true
+      - VULN_API5_FUNC_AUTH=true
+      - VULN_API6_BUSINESS_FLOW=true
+      - VULN_API7_SSRF=true
+      - VULN_API8_MISCONFIG=true
+      - VULN_API9_INVENTORY=true
+      - VULN_API10_UNSAFE_CONSUMP=true
+      - SAFE_MODE=false
+      - LOG_LEVEL=info
+    volumes:
+      - vulnyoga-db:/app/yogastore.db
+      - vulnyoga-logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - vulnyoga-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+
+
+volumes:
+  vulnyoga-db:
+    driver: local
+  vulnyoga-logs:
+    driver: local
+
+networks:
+  vulnyoga-network:
+    driver: bridge

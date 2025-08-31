@@ -1,0 +1,887 @@
+openapi: 3.1.0
+info:
+  title: VulnYoga API
+  description: |
+    # VulnYoga - Vulnerable-by-Design Yoga Store API
+    
+    ⚠️ **WARNING**: This API is intentionally vulnerable for security testing purposes.
+    Do NOT expose this API to the internet or production environments.
+    For isolated lab use only.
+    
+    ## OWASP API Security Top 10 (2023) Vulnerabilities
+    
+    This API intentionally includes vulnerabilities from the OWASP API Security Top 10:
+    
+    - **API1**: Broken Object Level Authorization (BOLA)
+    - **API2**: Broken Authentication
+    - **API3**: Broken Object Property Level Authorization (BOPLA)
+    - **API4**: Unrestricted Resource Consumption
+    - **API5**: Broken Function Level Authorization
+    - **API6**: Unrestricted Access to Sensitive Business Flows
+    - **API7**: Server-Side Request Forgery (SSRF)
+    - **API8**: Security Misconfiguration
+    - **API9**: Improper Inventory Management
+    - **API10**: Unsafe Consumption of APIs
+    
+    Each endpoint is annotated with the vulnerabilities it demonstrates.
+  version: 1.0.0
+  contact:
+    name: VulnYoga Team
+    email: security@vulnyoga.local
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+
+paths:
+  /api/v1/auth/register:
+    post:
+      summary: Register a new user
+      x-owasp:
+        categories: ["API3"]
+        vulnerableWhenEnv: "VULN_API3_BOPLA=true"
+        description: "Vulnerable to mass assignment of role field"
+      tags: ["Authentication"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/auth/login:
+    post:
+      summary: Login user
+      x-owasp:
+        categories: ["API2"]
+        vulnerableWhenEnv: "VULN_API2_BROKEN_AUTH=true"
+        description: "Weak JWT, accepts expired tokens, accepts token in query params"
+      tags: ["Authentication"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/auth/reset:
+    post:
+      summary: Request password reset
+      x-owasp:
+        categories: ["API2"]
+        vulnerableWhenEnv: "VULN_API2_BROKEN_AUTH=true"
+        description: "No proof of ownership required"
+      tags: ["Authentication"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '200':
+          description: Reset email sent (if email exists)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/v1/auth/reset/consume:
+    get:
+      summary: Consume password reset token
+      x-owasp:
+        categories: ["API2"]
+        vulnerableWhenEnv: "VULN_API2_BROKEN_AUTH=true"
+        description: "Weak token verification, no expiration check"
+      tags: ["Authentication"]
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsumeResetRequest'
+      responses:
+        '200':
+          description: Password updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/v1/users/{id}:
+    get:
+      summary: Get user by ID
+      x-owasp:
+        categories: ["API1"]
+        vulnerableWhenEnv: "VULN_API1_BOLA=true"
+        description: "No ownership check - any authenticated user can access any user"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: token
+          in: query
+          schema:
+            type: string
+          description: "Vulnerable: Token can be passed in query parameter"
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    patch:
+      summary: Update user
+      x-owasp:
+        categories: ["API1", "API3"]
+        vulnerableWhenEnv: "VULN_API1_BOLA=true,VULN_API3_BOPLA=true"
+        description: "No ownership check + mass assignment of sensitive fields"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /api/v1/items:
+    get:
+      summary: Get all items
+      tags: ["Items"]
+      responses:
+        '200':
+          description: List of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+
+    post:
+      summary: Create new item
+      x-owasp:
+        categories: ["API3", "API5"]
+        vulnerableWhenEnv: "VULN_API3_BOPLA=true,VULN_API5_FUNC_AUTH=true"
+        description: "Mass assignment + client-controlled role authorization"
+      tags: ["Items"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateItemRequest'
+      responses:
+        '201':
+          description: Item created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
+  /api/v1/items/search:
+    get:
+      summary: Search items
+      x-owasp:
+        categories: ["API4"]
+        vulnerableWhenEnv: "VULN_API4_RESOURCE=true"
+        description: "No limits on pageSize, CPU-intensive search"
+      tags: ["Items"]
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+          description: Search query
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 10
+          description: "Vulnerable: No upper limit enforced"
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+
+  /api/v1/items/{id}:
+    get:
+      summary: Get item by ID
+      tags: ["Items"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Item details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
+    patch:
+      summary: Update item
+      x-owasp:
+        categories: ["API3"]
+        vulnerableWhenEnv: "VULN_API3_BOPLA=true"
+        description: "Mass assignment of sensitive fields (costPrice, supplierEmail)"
+      tags: ["Items"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateItemRequest'
+      responses:
+        '200':
+          description: Item updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
+    delete:
+      summary: Delete item
+      x-owasp:
+        categories: ["API5"]
+        vulnerableWhenEnv: "VULN_API5_FUNC_AUTH=true"
+        description: "Client-controlled role authorization via X-Role header"
+      tags: ["Items"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: X-Role
+          in: header
+          schema:
+            type: string
+          description: "Vulnerable: Client can control authorization"
+      responses:
+        '200':
+          description: Item deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/v1/orders:
+    get:
+      summary: Get user's orders
+      tags: ["Orders"]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of user's orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+
+    post:
+      summary: Create new order
+      tags: ["Orders"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+  /api/v1/orders/{orderId}:
+    get:
+      summary: Get order by ID
+      x-owasp:
+        categories: ["API1"]
+        vulnerableWhenEnv: "VULN_API1_BOLA=true"
+        description: "No ownership check - any authenticated user can access any order"
+      tags: ["Orders"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+  /api/v1/checkout/pay:
+    post:
+      summary: Process payment
+      x-owasp:
+        categories: ["API6", "API10"]
+        vulnerableWhenEnv: "VULN_API6_BUSINESS_FLOW=true,VULN_API10_UNSAFE_CONSUMP=true"
+        description: "Out-of-order operations + trusts client-controlled payment status"
+      tags: ["Checkout"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutRequest'
+      responses:
+        '200':
+          description: Payment processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+  /api/v1/checkout/ship:
+    post:
+      summary: Ship order
+      x-owasp:
+        categories: ["API6"]
+        vulnerableWhenEnv: "VULN_API6_BUSINESS_FLOW=true"
+        description: "Allows shipping before payment"
+      tags: ["Checkout"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderId:
+                  type: integer
+      responses:
+        '200':
+          description: Order shipped successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+  /api/v1/image/proxy:
+    get:
+      summary: Proxy image from URL
+      x-owasp:
+        categories: ["API7"]
+        vulnerableWhenEnv: "VULN_API7_SSRF=true"
+        description: "No URL validation, allows internal network access"
+      tags: ["Utilities"]
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Vulnerable: No allowlist, allows file://, internal IPs"
+      responses:
+        '200':
+          description: Proxied image or content
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/export/csv:
+    get:
+      summary: Export items as CSV
+      x-owasp:
+        categories: ["API8"]
+        vulnerableWhenEnv: "VULN_API8_MISCONFIG=true"
+        description: "No authentication required for sensitive operation"
+      tags: ["Export"]
+      responses:
+        '200':
+          description: CSV file
+          content:
+            text/csv:
+              schema:
+                type: string
+        '401':
+          description: Authentication required (when secure)
+
+  /api/v1/admin/users:
+    get:
+      summary: Get all users (admin only)
+      x-owasp:
+        categories: ["API5"]
+        vulnerableWhenEnv: "VULN_API5_FUNC_AUTH=true"
+        description: "Any authenticated user can access admin endpoint"
+      tags: ["Admin"]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /api/v0/users/listAll:
+    get:
+      summary: Legacy endpoint - List all users
+      x-owasp:
+        categories: ["API9"]
+        vulnerableWhenEnv: "VULN_API9_INVENTORY=true"
+        description: "Legacy endpoint with no authentication"
+      tags: ["Legacy"]
+      responses:
+        '200':
+          description: List of all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /api/v0/items/bulk:
+    get:
+      summary: Legacy endpoint - Get items with optional supplier data
+      x-owasp:
+        categories: ["API9"]
+        vulnerableWhenEnv: "VULN_API9_INVENTORY=true"
+        description: "Legacy endpoint that leaks sensitive supplier data"
+      tags: ["Legacy"]
+      parameters:
+        - name: include
+          in: query
+          schema:
+            type: string
+            enum: [supplier]
+          description: "Vulnerable: Leaks costPrice and supplierEmail when include=supplier"
+      responses:
+        '200':
+          description: List of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Vulnerable: 
+        - Weak JWT secret
+        - Accepts expired tokens
+        - Accepts token in query parameter (?token=...)
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [CUSTOMER, STAFF, ADMIN]
+        address:
+          type: string
+        phone:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        costPrice:
+          type: number
+          description: "Vulnerable: Exposed in vulnerable mode"
+        supplierEmail:
+          type: string
+          description: "Vulnerable: Exposed in vulnerable mode"
+        stock:
+          type: integer
+        imageUrl:
+          type: string
+        isFeatured:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        status:
+          type: string
+          enum: [CART, PLACED, PAID, SHIPPED]
+        items:
+          type: string
+          description: "JSON string of order items"
+        total:
+          type: number
+        discountCode:
+          type: string
+        paid:
+          type: boolean
+        shippingAddress:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        user:
+          $ref: '#/components/schemas/User'
+
+    CreateUserRequest:
+      type: object
+      required:
+        - email
+        - password
+        - name
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        role:
+          type: string
+          enum: [CUSTOMER, STAFF, ADMIN]
+          description: "Vulnerable: Mass assignment allowed"
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        role:
+          type: string
+          enum: [CUSTOMER, STAFF, ADMIN]
+          description: "Vulnerable: Mass assignment allowed"
+        resetToken:
+          type: string
+          description: "Vulnerable: Mass assignment allowed"
+
+    CreateItemRequest:
+      type: object
+      required:
+        - name
+        - description
+        - price
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        costPrice:
+          type: number
+          description: "Vulnerable: Mass assignment allowed"
+        supplierEmail:
+          type: string
+          description: "Vulnerable: Mass assignment allowed"
+        stock:
+          type: integer
+        imageUrl:
+          type: string
+        isFeatured:
+          type: boolean
+
+    UpdateItemRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        costPrice:
+          type: number
+          description: "Vulnerable: Mass assignment allowed"
+        supplierEmail:
+          type: string
+          description: "Vulnerable: Mass assignment allowed"
+        stock:
+          type: integer
+        imageUrl:
+          type: string
+        isFeatured:
+          type: boolean
+
+    CreateOrderRequest:
+      type: object
+      required:
+        - items
+        - shippingAddress
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              itemId:
+                type: integer
+              qty:
+                type: integer
+        shippingAddress:
+          type: string
+        discountCode:
+          type: string
+
+    CheckoutRequest:
+      type: object
+      required:
+        - orderId
+      properties:
+        orderId:
+          type: integer
+        paid:
+          type: boolean
+          description: "Vulnerable: Client can control payment status"
+        amount:
+          type: number
+        currency:
+          type: string
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    ResetPasswordRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+
+    ConsumeResetRequest:
+      type: object
+      required:
+        - newPassword
+      properties:
+        newPassword:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        token:
+          type: string
+
+    SearchResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        pagination:
+          type: object
+          properties:
+            page:
+              type: integer
+            pageSize:
+              type: integer
+            total:
+              type: integer
+            totalPages:
+              type: integer
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+          description: "Vulnerable: Exposed in verbose error mode"
+        stack:
+          type: string
+          description: "Vulnerable: Exposed in verbose error mode"
+        details:
+          type: object
+          description: "Vulnerable: Exposed in verbose error mode"
+
+tags:
+  - name: Authentication
+    description: User authentication endpoints
+  - name: Users
+    description: User management endpoints
+  - name: Items
+    description: Product/item management endpoints
+  - name: Orders
+    description: Order management endpoints
+  - name: Checkout
+    description: Checkout and payment endpoints
+  - name: Admin
+    description: Administrative endpoints
+  - name: Utilities
+    description: Utility endpoints
+  - name: Export
+    description: Data export endpoints
+  - name: Legacy
+    description: Legacy API endpoints (v0)
