@@ -181,8 +181,16 @@ app.delete('/api/v1/admin/users/:id', adminController.deleteUser);
 try {
   const swaggerDocument = YAML.load(path.join(__dirname, '../openapi.yaml'));
   
-  // Serve OpenAPI specification as JSON
+  // Serve OpenAPI specification as JSON (multiple endpoints for compatibility)
   app.get('/api-docs', (req, res) => {
+    res.json(swaggerDocument);
+  });
+  
+  app.get('/openapi.json', (req, res) => {
+    res.json(swaggerDocument);
+  });
+  
+  app.get('/swagger.json', (req, res) => {
     res.json(swaggerDocument);
   });
   
