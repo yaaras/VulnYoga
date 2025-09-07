@@ -1,0 +1,39 @@
+{
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "name": "yogastore_prod",
+    "user": "yoga_user",
+    "password": "super_secret_password_123"
+  },
+  "jwt": {
+    "secret": "production_jwt_secret_key_should_be_very_long_and_random",
+    "expiresIn": "24h"
+  },
+  "api": {
+    "version": "1.0.0",
+    "baseUrl": "https://api.yogastore.com",
+    "rateLimit": {
+      "windowMs": 900000,
+      "max": 100
+    }
+  },
+  "email": {
+    "smtp": {
+      "host": "smtp.gmail.com",
+      "port": 587,
+      "user": "noreply@yogastore.com",
+      "password": "email_password_456"
+    }
+  },
+  "payment": {
+    "stripe": {
+      "secretKey": "sk_test_51ABC123DEF456GHI789JKL012MNO345PQR678STU901VWX234YZA567BCD890",
+      "webhookSecret": "whsec_test_webhook_secret_123456789"
+    }
+  },
+  "vulnerabilities": {
+    "note": "This file contains sensitive configuration that should never be exposed via directory listing",
+    "demonstrates": "API8 Security Misconfiguration - Information Disclosure"
+  }
+}

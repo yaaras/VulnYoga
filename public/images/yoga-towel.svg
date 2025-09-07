@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="towelGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#74b9ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0984e3;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Main towel -->
+  <rect x="10" y="25" width="80" height="50" rx="8" fill="url(#towelGradient)" stroke="#fff" stroke-width="2"/>
+  
+  <!-- Towel texture -->
+  <rect x="15" y="30" width="70" height="40" rx="4" fill="rgba(255,255,255,0.2)"/>
+  
+  <!-- Towel pattern -->
+  <rect x="20" y="35" width="60" height="30" rx="2" fill="rgba(255,255,255,0.1)"/>
+  
+  <!-- Decorative lines -->
+  <path d="M20 40 L80 40" stroke="#fff" stroke-width="1" opacity="0.6"/>
+  <path d="M20 45 L80 45" stroke="#fff" stroke-width="1" opacity="0.6"/>
+  <path d="M20 50 L80 50" stroke="#fff" stroke-width="1" opacity="0.6"/>
+  <path d="M20 55 L80 55" stroke="#fff" stroke-width="1" opacity="0.6"/>
+  <path d="M20 60 L80 60" stroke="#fff" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Corner fold -->
+  <path d="M70 25 L80 25 L80 35 L70 35 Z" fill="rgba(255,255,255,0.3)"/>
+  <path d="M70 25 L80 35" stroke="#fff" stroke-width="1" opacity="0.8"/>
+  
+  <!-- Towel tag -->
+  <rect x="75" y="30" width="12" height="8" rx="2" fill="#fff" opacity="0.9"/>
+  <text x="81" y="35" font-family="Arial" font-size="6" fill="#333" text-anchor="middle">YOGA</text>
+</svg>

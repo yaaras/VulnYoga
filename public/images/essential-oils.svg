@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="oilGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00b894;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00a085;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Oil bottles -->
+  <g transform="translate(20, 30)">
+    <!-- Bottle 1 -->
+    <rect x="0" y="0" width="12" height="25" rx="2" fill="url(#oilGradient)" stroke="#fff" stroke-width="1"/>
+    <rect x="2" y="2" width="8" height="21" rx="1" fill="rgba(255,255,255,0.2)"/>
+    <circle cx="6" cy="8" r="2" fill="#fff" opacity="0.8"/>
+    <path d="M4 20 L8 20" stroke="#fff" stroke-width="1"/>
+  </g>
+  
+  <g transform="translate(35, 30)">
+    <!-- Bottle 2 -->
+    <rect x="0" y="0" width="12" height="25" rx="2" fill="url(#oilGradient)" stroke="#fff" stroke-width="1"/>
+    <rect x="2" y="2" width="8" height="21" rx="1" fill="rgba(255,255,255,0.2)"/>
+    <circle cx="6" cy="8" r="2" fill="#fff" opacity="0.8"/>
+    <path d="M4 20 L8 20" stroke="#fff" stroke-width="1"/>
+  </g>
+  
+  <g transform="translate(50, 30)">
+    <!-- Bottle 3 -->
+    <rect x="0" y="0" width="12" height="25" rx="2" fill="url(#oilGradient)" stroke="#fff" stroke-width="1"/>
+    <rect x="2" y="2" width="8" height="21" rx="1" fill="rgba(255,255,255,0.2)"/>
+    <circle cx="6" cy="8" r="2" fill="#fff" opacity="0.8"/>
+    <path d="M4 20 L8 20" stroke="#fff" stroke-width="1"/>
+  </g>
+  
+  <g transform="translate(65, 30)">
+    <!-- Bottle 4 -->
+    <rect x="0" y="0" width="12" height="25" rx="2" fill="url(#oilGradient)" stroke="#fff" stroke-width="1"/>
+    <rect x="2" y="2" width="8" height="21" rx="1" fill="rgba(255,255,255,0.2)"/>
+    <circle cx="6" cy="8" r="2" fill="#fff" opacity="0.8"/>
+    <path d="M4 20 L8 20" stroke="#fff" stroke-width="1"/>
+  </g>
+  
+  <!-- Aromatherapy symbols -->
+  <g transform="translate(50, 70)">
+    <circle cx="0" cy="0" r="8" fill="none" stroke="#fff" stroke-width="2" opacity="0.6"/>
+    <path d="M-4 -4 L4 4 M-4 4 L4 -4" stroke="#fff" stroke-width="1" opacity="0.8"/>
+  </g>
+  
+  <!-- Decorative elements -->
+  <circle cx="25" cy="45" r="1" fill="#fff" opacity="0.6"/>
+  <circle cx="40" cy="45" r="1" fill="#fff" opacity="0.6"/>
+  <circle cx="55" cy="45" r="1" fill="#fff" opacity="0.6"/>
+  <circle cx="70" cy="45" r="1" fill="#fff" opacity="0.6"/>
+</svg>
