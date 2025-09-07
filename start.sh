@@ -9,7 +9,7 @@ if [ ! -f /app/yogastore.db ]; then
     
     # Run seed using compiled JavaScript
     echo "🌱 Seeding database..."
-    node dist/prisma/seed.js
+    node prisma/seed.js
     
     echo "✅ Database initialized successfully"
 else
