@@ -18,6 +18,12 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+# Explicitly ensure public directory exists and has correct permissions
+RUN mkdir -p public && chmod -R 755 public
+
+# Verify public directory and files exist
+RUN ls -la public/ && echo "Public directory contents verified"
+
 # Build TypeScript code to JavaScript
 RUN npm run build
 

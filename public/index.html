@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VulnYoga Shop - Yoga Equipment & Accessories</title>
+    <link rel="stylesheet" href="/public/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <i class="fas fa-yoga"></i>
+                <span>VulnYoga Shop</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#shop" class="nav-link">Shop</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <a href="/docs" class="nav-link" target="_blank">API Docs</a>
+                <button id="cartBtn" class="btn btn-secondary" style="display: none;">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart <span id="cartCount">0</span>
+                </button>
+                <button id="loginBtn" class="btn btn-primary">Login</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Find Your Inner Peace</h1>
+                <p>Premium yoga equipment and accessories for your practice</p>
+                <button class="btn btn-primary btn-large" onclick="scrollToShop()">
+                    <i class="fas fa-shopping-bag"></i>
+                    Shop Now
+                </button>
+            </div>
+        </section>
+
+        <!-- Shop Section -->
+        <section id="shop" class="shop-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Yoga Shop</h2>
+                    <p>Discover our collection of premium yoga equipment</p>
+                </div>
+
+                <!-- Search and Filter -->
+                <div class="shop-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search items...">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="featured">Featured</button>
+                        <button class="filter-btn" data-filter="mats">Mats</button>
+                        <button class="filter-btn" data-filter="props">Props</button>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading items...</p>
+                </div>
+
+                <!-- Items Grid -->
+                <div id="itemsGrid" class="items-grid"></div>
+
+                <!-- No Items State -->
+                <div id="noItems" class="no-items" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <h3>No items found</h3>
+                    <p>Try adjusting your search or filters</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about-section">
+            <div class="container">
+                <div class="about-content">
+                    <h2>About VulnYoga</h2>
+                    <p>VulnYoga is a demonstration platform showcasing common API security vulnerabilities. This shop interface demonstrates how a real yoga equipment store might look, while the underlying API contains intentional security flaws for educational purposes.</p>
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <h3>Security Testing</h3>
+                            <p>Learn about OWASP API Security Top 10 vulnerabilities</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-graduation-cap"></i>
+                            <h3>Educational</h3>
+                            <p>Safe environment for security researchers and developers</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-code"></i>
+                            <h3>Open Source</h3>
+                            <p>Full source code available for learning and modification</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-book"></i>
+                            <h3>API Documentation</h3>
+                            <p>Complete OpenAPI specification and interactive Swagger UI</p>
+                        </div>
+                    </div>
+                    <div class="api-docs-section">
+                        <h3>API Documentation</h3>
+                        <p>Explore the complete API specification and test endpoints directly in your browser:</p>
+                        <div class="api-links">
+                            <a href="/docs" class="btn btn-primary" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
+                                Interactive API Docs
+                            </a>
+                            <a href="/api-docs" class="btn btn-secondary" target="_blank">
+                                <i class="fas fa-code"></i>
+                                OpenAPI JSON
+                            </a>
+                            <a href="/openapi.json" class="btn btn-secondary" target="_blank">
+                                <i class="fas fa-file-code"></i>
+                                OpenAPI JSON (Alt)
+                            </a>
+                            <a href="/swagger.json" class="btn btn-secondary" target="_blank">
+                                <i class="fas fa-file-code"></i>
+                                Swagger JSON
+                            </a>
+                            <a href="/openapi.yaml" class="btn btn-secondary" target="_blank">
+                                <i class="fas fa-file-code"></i>
+                                OpenAPI YAML
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="vulnerability-demo-section">
+                        <h3>🔓 SSRF Vulnerability Demo</h3>
+                        <p>Test the Server-Side Request Forgery vulnerability in the image proxy endpoint:</p>
+                        <div class="ssrf-demo">
+                            <div class="demo-input">
+                                <label for="ssrfUrl">URL to proxy:</label>
+                                <input type="text" id="ssrfUrl" placeholder="https://picsum.photos/200/300" value="http://127.0.0.1:3000/healthz">
+                                <button onclick="testSSRF()" class="btn btn-danger">
+                                    <i class="fas fa-bug"></i>
+                                    Test SSRF
+                                </button>
+                            </div>
+                            <div class="demo-result">
+                                <label>Response:</label>
+                                <pre id="ssrfResult">Click "Test SSRF" to see the result...</pre>
+                            </div>
+                            <div class="demo-examples">
+                                <h4>Example SSRF URLs to test:</h4>
+                                <ul>
+                                    <li><code>http://127.0.0.1:3000/healthz</code> - Internal health check</li>
+                                    <li><code>http://127.0.0.1:3000/api/v1/items</code> - Internal API data</li>
+                                    <li><code>http://localhost:3000/api/v1/users/1</code> - Internal user data</li>
+                                    <li><code>file:///etc/passwd</code> - System file (may fail)</li>
+                                    <li><code>http://169.254.169.254/latest/meta-data/</code> - AWS metadata</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login to VulnYoga</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <p class="demo-credentials">
+                <strong>Demo Credentials:</strong><br>
+                Email: alice@demo.local<br>
+                Password: alice123<br>
+                <br>
+                <strong>Staff:</strong><br>
+                Email: bob@demo.local<br>
+                Password: bob123<br>
+                <br>
+                <strong>Admin:</strong><br>
+                Email: admin@demo.local<br>
+                Password: admin123
+            </p>
+            <p class="register-link">
+                Don't have an account? <a href="#" id="showRegister">Register here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Register for VulnYoga</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regName">Full Name</label>
+                    <input type="text" id="regName" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regAddress">Address (Optional)</label>
+                    <textarea id="regAddress" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="regPhone">Phone (Optional)</label>
+                    <input type="tel" id="regPhone">
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+            <p class="login-link">
+                Already have an account? <a href="#" id="showLogin">Login here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Item Detail Modal -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="itemDetail" class="item-detail">
+                <!-- Item details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+            <div id="cartContent">
+                <div id="cartItems" class="cart-items"></div>
+                <div id="cartEmpty" class="cart-empty" style="display: none;">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3>Your cart is empty</h3>
+                    <p>Add some items to get started!</p>
+                </div>
+                <div id="cartSummary" class="cart-summary" style="display: none;">
+                    <div class="cart-total">
+                        <strong>Total: $<span id="cartTotal">0.00</span></strong>
+                    </div>
+                    <div class="cart-actions">
+                        <button class="btn btn-secondary" onclick="clearCart()">
+                            <i class="fas fa-trash"></i>
+                            Clear Cart
+                        </button>
+                        <button class="btn btn-primary" onclick="checkout()">
+                            <i class="fas fa-credit-card"></i>
+                            Checkout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 VulnYoga. Educational platform for API security testing.</p>
+            <p><strong>⚠️ Warning:</strong> This is intentionally vulnerable software. Use only in isolated environments.</p>
+        </div>
+    </footer>
+
+    <script src="/public/script.js"></script>
+</body>
+</html>

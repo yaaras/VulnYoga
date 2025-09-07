@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="cushionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a8edea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fed6e3;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Main cushion -->
+  <ellipse cx="50" cy="60" rx="35" ry="25" fill="url(#cushionGradient)" stroke="#fff" stroke-width="2"/>
+  
+  <!-- Cushion texture -->
+  <ellipse cx="50" cy="60" rx="30" ry="20" fill="rgba(255,255,255,0.3)"/>
+  
+  <!-- Decorative pattern -->
+  <circle cx="40" cy="55" r="3" fill="#fff" opacity="0.6"/>
+  <circle cx="60" cy="55" r="3" fill="#fff" opacity="0.6"/>
+  <circle cx="50" cy="65" r="3" fill="#fff" opacity="0.6"/>
+  <circle cx="35" cy="65" r="2" fill="#fff" opacity="0.4"/>
+  <circle cx="65" cy="65" r="2" fill="#fff" opacity="0.4"/>
+  
+  <!-- Lotus flower pattern -->
+  <g transform="translate(50, 60)">
+    <path d="M0 -8 L2 -4 L8 -2 L4 0 L2 4 L0 8 L-2 4 L-4 0 L-8 -2 L-2 -4 Z" fill="#fff" opacity="0.7"/>
+    <path d="M0 -6 L1.5 -3 L6 -1.5 L3 0 L1.5 3 L0 6 L-1.5 3 L-3 0 L-6 -1.5 L-1.5 -3 Z" fill="url(#cushionGradient)" opacity="0.8"/>
+  </g>
+</svg>

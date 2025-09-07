@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" fill="none">
+  <defs>
+    <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:rgba(102, 126, 234, 0.1);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:rgba(118, 75, 162, 0.1);stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="circleGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:rgba(255,255,255,0);stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background gradient -->
+  <rect width="1200" height="400" fill="url(#heroGradient)"/>
+  
+  <!-- Floating circles -->
+  <circle cx="100" cy="80" r="20" fill="url(#circleGradient)" opacity="0.6"/>
+  <circle cx="300" cy="120" r="15" fill="url(#circleGradient)" opacity="0.4"/>
+  <circle cx="500" cy="60" r="25" fill="url(#circleGradient)" opacity="0.5"/>
+  <circle cx="700" cy="100" r="18" fill="url(#circleGradient)" opacity="0.3"/>
+  <circle cx="900" cy="80" r="22" fill="url(#circleGradient)" opacity="0.4"/>
+  <circle cx="1100" cy="120" r="16" fill="url(#circleGradient)" opacity="0.5"/>
+  
+  <!-- Yoga pose silhouettes -->
+  <g transform="translate(150, 250)" opacity="0.1">
+    <!-- Warrior pose -->
+    <circle cx="0" cy="-15" r="5" fill="#fff"/>
+    <path d="M0 -10 L0 10" stroke="#fff" stroke-width="3"/>
+    <path d="M-8 -5 L8 -5" stroke="#fff" stroke-width="3"/>
+    <path d="M0 10 L-5 25" stroke="#fff" stroke-width="3"/>
+    <path d="M0 10 L5 25" stroke="#fff" stroke-width="3"/>
+  </g>
+  
+  <g transform="translate(350, 280)" opacity="0.08">
+    <!-- Tree pose -->
+    <circle cx="0" cy="-20" r="5" fill="#fff"/>
+    <path d="M0 -15 L0 15" stroke="#fff" stroke-width="3"/>
+    <path d="M-5 -10 L5 -10" stroke="#fff" stroke-width="3"/>
+    <path d="M0 15 L-3 30" stroke="#fff" stroke-width="3"/>
+    <path d="M0 15 L3 30" stroke="#fff" stroke-width="3"/>
+  </g>
+  
+  <g transform="translate(550, 260)" opacity="0.12">
+    <!-- Downward dog -->
+    <circle cx="0" cy="-10" r="4" fill="#fff"/>
+    <path d="M0 -6 L0 8" stroke="#fff" stroke-width="2"/>
+    <path d="M-6 -2 L6 -2" stroke="#fff" stroke-width="2"/>
+    <path d="M0 8 L-4 20" stroke="#fff" stroke-width="2"/>
+    <path d="M0 8 L4 20" stroke="#fff" stroke-width="2"/>
+  </g>
+  
+  <g transform="translate(750, 270)" opacity="0.09">
+    <!-- Child's pose -->
+    <circle cx="0" cy="-8" r="4" fill="#fff"/>
+    <path d="M0 -4 L0 12" stroke="#fff" stroke-width="2"/>
+    <path d="M-5 2 L5 2" stroke="#fff" stroke-width="2"/>
+  </g>
+  
+  <g transform="translate(950, 250)" opacity="0.11">
+    <!-- Cobra pose -->
+    <circle cx="0" cy="-12" r="4" fill="#fff"/>
+    <path d="M0 -8 L0 8" stroke="#fff" stroke-width="2"/>
+    <path d="M-4 -4 L4 -4" stroke="#fff" stroke-width="2"/>
+    <path d="M0 8 L-3 18" stroke="#fff" stroke-width="2"/>
+    <path d="M0 8 L3 18" stroke="#fff" stroke-width="2"/>
+  </g>
+  
+  <!-- Decorative elements -->
+  <path d="M50 150 Q200 100 350 150" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none"/>
+  <path d="M400 120 Q550 80 700 120" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none"/>
+  <path d="M750 140 Q900 100 1050 140" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none"/>
+  
+  <!-- Lotus flowers -->
+  <g transform="translate(200, 320)" opacity="0.15">
+    <path d="M0 -8 L2 -4 L8 -2 L4 0 L2 4 L0 8 L-2 4 L-4 0 L-8 -2 L-2 -4 Z" fill="#fff"/>
+  </g>
+  
+  <g transform="translate(600, 340)" opacity="0.12">
+    <path d="M0 -6 L1.5 -3 L6 -1.5 L3 0 L1.5 3 L0 6 L-1.5 3 L-3 0 L-6 -1.5 L-1.5 -3 Z" fill="#fff"/>
+  </g>
+  
+  <g transform="translate(1000, 330)" opacity="0.14">
+    <path d="M0 -7 L1.8 -3.5 L7 -1.8 L3.5 0 L1.8 3.5 L0 7 L-1.8 3.5 L-3.5 0 L-7 -1.8 L-1.8 -3.5 Z" fill="#fff"/>
+  </g>
+</svg>

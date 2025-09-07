@@ -227,8 +227,30 @@ try {
 
 // Serve the main web interface
 app.get("/", (req, res) => {
-  const indexPath = path.join(process.cwd(), "public", "index.html");
-  res.sendFile(indexPath);
+  try {
+    const indexPath = path.join(process.cwd(), "public", "index.html");
+    console.log("Attempting to serve file:", indexPath);
+    console.log("Current working directory:", process.cwd());
+    console.log("File exists:", require('fs').existsSync(indexPath));
+    
+    res.sendFile(indexPath, (err) => {
+      if (err) {
+        console.error("Error serving index.html:", err);
+        res.status(500).json({ 
+          error: "Failed to serve index.html", 
+          details: err.message,
+          path: indexPath,
+          cwd: process.cwd()
+        });
+      }
+    });
+  } catch (error) {
+    console.error("Error in root route:", error);
+    res.status(500).json({ 
+      error: "Internal server error", 
+      details: error instanceof Error ? error.message : String(error)
+    });
+  }
 });
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
