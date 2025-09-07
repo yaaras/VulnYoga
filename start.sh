@@ -1,6 +1,11 @@
 #!/bin/sh
 
 echo "🚀 Starting VulnYoga..."
+echo "📁 Current directory: $(pwd)"
+echo "📁 Contents: $(ls -la)"
+echo "🌐 Hostname: $(hostname)"
+echo "🔧 Node version: $(node --version)"
+echo "📦 NPM version: $(npm --version)"
 
 # Check if database exists, if not initialize it
 if [ ! -f /app/yogastore.db ]; then
