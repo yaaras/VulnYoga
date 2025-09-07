@@ -493,3 +493,210 @@ async function simulatePayment(amount: number, currency: string): Promise<{ succ
   // Simulate payment success (90% success rate)
   return { success: Math.random() > 0.1 };
 }
+
+// Get current user's cart
+export const getMyCart = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const requestingUser = req.user!;
+    const cartOrder = await prisma.order.findFirst({
+      where: {
+        userId: requestingUser.id,
+        status: 'CART'
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+
+    if (!cartOrder) {
+      res.json({
+        cartId: null,
+        userId: requestingUser.id,
+        items: [],
+        total: 0,
+        status: 'CART',
+        createdAt: new Date()
+      });
+      return;
+    }
+
+    const cartItems = JSON.parse(cartOrder.items);
+    res.json({
+      cartId: cartOrder.id,
+      userId: cartOrder.userId,
+      user: cartOrder.user,
+      items: cartItems,
+      total: cartOrder.total,
+      status: cartOrder.status,
+      createdAt: cartOrder.createdAt
+    });
+  } catch (error) {
+    logger.error('Get my cart error', { error });
+    res.status(500).json({ error: 'Failed to get cart' });
+  }
+};
+
+// Remove item from cart
+export const removeFromCart = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const requestingUser = req.user!;
+    const { itemId, qty } = req.body;
+
+    if (!itemId) {
+      res.status(400).json({ error: 'Item ID is required' });
+      return;
+    }
+
+    const cartOrder = await prisma.order.findFirst({
+      where: {
+        userId: requestingUser.id,
+        status: 'CART'
+      }
+    });
+
+    if (!cartOrder) {
+      res.status(404).json({ error: 'Cart not found' });
+      return;
+    }
+
+    const currentItems = JSON.parse(cartOrder.items);
+    const itemIndex = currentItems.findIndex((item: any) => item.itemId === itemId);
+
+    if (itemIndex === -1) {
+      res.status(404).json({ error: 'Item not found in cart' });
+      return;
+    }
+
+    if (qty && qty < currentItems[itemIndex].qty) {
+      currentItems[itemIndex].qty -= qty;
+    } else {
+      currentItems.splice(itemIndex, 1);
+    }
+
+    // Recalculate total
+    let total = 0;
+    for (const cartItem of currentItems) {
+      const dbItem = await prisma.item.findUnique({
+        where: { id: cartItem.itemId }
+      });
+      if (dbItem) {
+        total += dbItem.price * cartItem.qty;
+      }
+    }
+
+    const updatedCart = await prisma.order.update({
+      where: { id: cartOrder.id },
+      data: {
+        items: JSON.stringify(currentItems),
+        total
+      }
+    });
+
+    res.json({
+      message: 'Item removed from cart successfully',
+      cart: {
+        cartId: updatedCart.id,
+        userId: updatedCart.userId,
+        items: currentItems,
+        total: updatedCart.total,
+        status: updatedCart.status
+      }
+    });
+  } catch (error) {
+    logger.error('Remove from cart error', { error });
+    res.status(500).json({ error: 'Failed to remove from cart' });
+  }
+};
+
+// Clear cart
+export const clearCart = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const requestingUser = req.user!;
+    const cartOrder = await prisma.order.findFirst({
+      where: {
+      userId: requestingUser.id,
+      status: 'CART'
+    }
+    });
+
+    if (!cartOrder) {
+      res.status(404).json({ error: 'Cart not found' });
+      return;
+    }
+
+    await prisma.order.update({
+      where: { id: cartOrder.id },
+      data: {
+        items: JSON.stringify([]),
+        total: 0
+      }
+    });
+
+    res.json({
+      message: 'Cart cleared successfully',
+      cart: {
+        cartId: cartOrder.id,
+        userId: cartOrder.userId,
+        items: [],
+        total: 0,
+        status: 'CART'
+      }
+    });
+  } catch (error) {
+    logger.error('Clear cart error', { error });
+    res.status(500).json({ error: 'Failed to clear cart' });
+  }
+};
+
+// VULN_API1_BOLA: Get cart by user ID (unauthenticated - vulnerable to BOLA)
+export const getCartByUserId = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = parseInt(req.params.userId);
+    
+    if (isNaN(userId)) {
+      res.status(400).json({ error: 'Invalid user ID' });
+      return;
+    }
+
+    const cartOrder = await prisma.order.findFirst({
+      where: {
+        userId: userId,
+        status: 'CART'
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+
+    if (!cartOrder) {
+      res.status(404).json({ error: 'Cart not found' });
+      return;
+    }
+
+    const cartItems = JSON.parse(cartOrder.items);
+    res.json({
+      cartId: cartOrder.id,
+      userId: cartOrder.userId,
+      user: cartOrder.user,
+      items: cartItems,
+      total: cartOrder.total,
+      status: cartOrder.status,
+      createdAt: cartOrder.createdAt
+    });
+  } catch (error) {
+    logger.error('Get cart by user ID error', { error });
+    res.status(500).json({ error: 'Failed to get cart' });
+  }
+};

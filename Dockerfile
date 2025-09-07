@@ -6,14 +6,14 @@ LABEL description="VulnYoga - Vulnerable-by-Design Yoga Store API for security t
 # Create app directory
 WORKDIR /app
 
-# Install curl for healthcheck
-RUN apk add --no-cache curl
+# Install curl for healthcheck and OpenSSL for Prisma
+RUN apk add --no-cache curl openssl
 
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install all dependencies (including dev dependencies for build)
+RUN npm ci
 
 # Copy source code
 COPY . .
@@ -21,8 +21,14 @@ COPY . .
 # Generate Prisma client
 RUN npx prisma generate
 
+# Remove dev dependencies to reduce image size
+RUN npm ci --only=production && npm cache clean --force
+
 # Create necessary directories
 RUN mkdir -p logs public
+
+# Make startup script executable
+RUN chmod +x /app/start.sh
 
 # Expose port
 EXPOSE 3000
@@ -30,16 +36,6 @@ EXPOSE 3000
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD curl -f http://localhost:3000/healthz || exit 1
-
-# Create startup script
-RUN echo '#!/bin/sh\n\
-if [ ! -f /app/yogastore.db ]; then\n\
-  echo "Initializing database..."\n\
-  npx prisma db push\n\
-  npm run seed\n\
-fi\n\
-echo "Starting VulnYoga..."\n\
-npm start' > /app/start.sh && chmod +x /app/start.sh
 
 # Start the application
 CMD ["/app/start.sh"]

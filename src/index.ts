@@ -152,7 +152,13 @@ app.get('/api/v1/orders/:orderId', orderController.getOrder);
 app.post('/api/v1/orders', orderController.createOrder);
 
 // Cart routes
+app.get('/api/v1/cart', orderController.getMyCart);
 app.post('/api/v1/cart/add', orderController.addToCart);
+app.delete('/api/v1/cart/remove', orderController.removeFromCart);
+app.delete('/api/v1/cart/clear', orderController.clearCart);
+
+// VULN_API1_BOLA: Broken Object Level Authorization - View cart by user ID (unauthenticated)
+app.get('/api/v1/cart-view/:userId', orderController.getCartByUserId);
 
 // Checkout routes
 app.post('/api/v1/checkout/start', orderController.startCheckout);

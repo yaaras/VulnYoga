@@ -421,6 +421,102 @@ paths:
               schema:
                 $ref: '#/components/schemas/Order'
 
+  # Cart Endpoints
+  /api/v1/cart:
+    get:
+      summary: Get user's cart
+      tags: ["Cart"]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User's cart contents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+
+    post:
+      summary: Add item to cart
+      tags: ["Cart"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddToCartRequest'
+      responses:
+        '200':
+          description: Item added to cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResponse'
+
+    delete:
+      summary: Remove item from cart
+      tags: ["Cart"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveFromCartRequest'
+      responses:
+        '200':
+          description: Item removed from cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResponse'
+
+  /api/v1/cart/clear:
+    delete:
+      summary: Clear entire cart
+      tags: ["Cart"]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Cart cleared successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResponse'
+
+  /api/v1/cart-view/{userId}:
+    get:
+      summary: View cart by user ID (BOLA Vulnerability)
+      x-owasp:
+        categories: ["API1"]
+        vulnerableWhenEnv: "VULN_API1_BOLA=true"
+        description: "Broken Object Level Authorization - unauthenticated access to any user's cart"
+      tags: ["Cart", "Vulnerabilities"]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of user whose cart to view
+      responses:
+        '200':
+          description: Cart contents (vulnerable to BOLA)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '404':
+          description: Cart not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/v1/checkout/pay:
     post:
       summary: Process payment
@@ -866,6 +962,68 @@ components:
           type: object
           description: "Vulnerable: Exposed in verbose error mode"
 
+    # Cart Schemas
+    Cart:
+      type: object
+      properties:
+        cartId:
+          type: integer
+        userId:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+        total:
+          type: number
+        status:
+          type: string
+          enum: [CART]
+        createdAt:
+          type: string
+          format: date-time
+
+    CartItem:
+      type: object
+      properties:
+        itemId:
+          type: integer
+        qty:
+          type: integer
+
+    AddToCartRequest:
+      type: object
+      required:
+        - itemId
+        - qty
+      properties:
+        itemId:
+          type: integer
+        qty:
+          type: integer
+          minimum: 1
+
+    RemoveFromCartRequest:
+      type: object
+      required:
+        - itemId
+      properties:
+        itemId:
+          type: integer
+        qty:
+          type: integer
+          description: "Optional: Remove specific quantity, otherwise remove all"
+
+    CartResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        cart:
+          $ref: '#/components/schemas/Cart'
+
 tags:
   - name: Authentication
     description: User authentication endpoints
@@ -875,6 +1033,8 @@ tags:
     description: Product/item management endpoints
   - name: Orders
     description: Order management endpoints
+  - name: Cart
+    description: Shopping cart management endpoints
   - name: Checkout
     description: Checkout and payment endpoints
   - name: Admin
