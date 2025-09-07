@@ -86,7 +86,7 @@ app.get('/metrics', (req, res) => {
 // VULN_API8_MISCONFIG: Directory listing
 if (config.vulnerabilities.api8Misconfig) {
   // Vulnerable: Enable directory listing
-  app.use('/public', express.static(path.join(__dirname, '../public'), {
+  app.use('/public', express.static(path.join(process.cwd(), 'public'), {
     index: false,
     dotfiles: 'allow'
   }));
@@ -227,7 +227,8 @@ try {
 
 // Serve the main web interface
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
+  const indexPath = path.join(process.cwd(), "public", "index.html");
+  res.sendFile(indexPath);
 });
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
