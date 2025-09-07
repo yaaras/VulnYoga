@@ -18,6 +18,9 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+# Build TypeScript code to JavaScript
+RUN npm run build
+
 # Generate Prisma client
 RUN npx prisma generate
 
