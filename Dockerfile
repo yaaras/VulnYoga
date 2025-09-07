@@ -28,7 +28,7 @@ RUN npx prisma generate
 RUN npm ci --only=production && npm cache clean --force
 
 # Create necessary directories
-RUN mkdir -p logs public
+RUN mkdir -p logs
 
 # Make startup script executable
 RUN chmod +x /app/start.sh
