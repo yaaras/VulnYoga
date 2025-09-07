@@ -59,8 +59,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     // Generate JWT
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: user.role },
-      config.jwtSecret as any,
-      { expiresIn: config.jwtExpiresIn }
+      config.jwtSecret,
+      { expiresIn: config.jwtExpiresIn } as any
     );
 
     res.status(201).json({
@@ -96,8 +96,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     // Generate JWT
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: user.role },
-      config.jwtSecret as any,
-      { expiresIn: config.jwtExpiresIn }
+      config.jwtSecret,
+      { expiresIn: config.jwtExpiresIn } as any
     );
 
     res.json({
@@ -259,7 +259,7 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
       // Generate reset token
       const resetToken = jwt.sign(
         { userId: user.id, email: user.email },
-        config.jwtSecret as any,
+        config.jwtSecret,
         { expiresIn: '1h' }
       );
 

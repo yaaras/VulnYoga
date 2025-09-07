@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 
 export const proxyImage = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { url } = req.query as ImageProxyRequest;
+    const { url } = req.query as any;
     const requestingUser = (req as AuthenticatedRequest).user;
 
     if (!url) {
@@ -20,9 +20,8 @@ export const proxyImage = async (req: Request, res: Response): Promise<void> => 
       try {
         const response = await fetch(url, {
           method: 'GET',
-          redirect: 'follow', // Follow redirects (dangerous)
-          timeout: 10000
-        });
+          redirect: 'follow' // Follow redirects (dangerous)
+        } as any);
 
         if (!response.ok) {
           res.status(response.status).json({ error: 'Failed to fetch image' });
@@ -105,9 +104,8 @@ export const proxyImage = async (req: Request, res: Response): Promise<void> => 
       try {
         const response = await fetch(url, {
           method: 'GET',
-          redirect: 'manual', // Don't follow redirects
-          timeout: 5000
-        });
+          redirect: 'manual' // Don't follow redirects
+        } as any);
 
         if (!response.ok) {
           res.status(response.status).json({ error: 'Failed to fetch image' });

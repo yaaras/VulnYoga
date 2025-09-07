@@ -65,8 +65,8 @@ export const searchItems = async (req: Request, res: Response): Promise<void> =>
     const requestingUser = (req as AuthenticatedRequest).user;
 
     // VULN_API4_RESOURCE: Unrestricted Resource Consumption
-    let actualPageSize = parseInt(pageSize as string);
-    let actualPage = parseInt(page as string);
+    let actualPageSize = parseInt(String(pageSize)) || 10;
+    let actualPage = parseInt(String(page)) || 1;
 
     if (config.vulnerabilities.api4Resource) {
       // Vulnerable: No limits on pageSize or search complexity
@@ -149,6 +149,8 @@ export const createItem = async (req: AuthenticatedRequest, res: Response): Prom
       const item = await prisma.item.create({
         data: {
           ...itemData,
+          costPrice: itemData.costPrice || 0,
+          supplierEmail: itemData.supplierEmail || '',
           createdByUserId: requestingUser.id
         },
         select: {
@@ -350,7 +352,7 @@ export const exportItems = async (req: Request, res: Response): Promise<void> =>
 
     // Convert to CSV format
     const csvHeader = 'ID,Name,Description,Price,Stock,Featured,Created\n';
-    const csvRows = items.map(item => 
+    const csvRows = items.map((item: any) => 
       `${item.id},"${item.name}","${item.description}",${item.price},${item.stock},${item.isFeatured},${item.createdAt}`
     ).join('\n');
 
