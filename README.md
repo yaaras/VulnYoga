@@ -74,16 +74,16 @@ The API will be available at `http://localhost:3000`
 
 ```bash
 # Build and start the application
-docker-compose up --build
+docker compose up --build
 
 # Start the application (after first run)
-docker-compose up
+docker compose up
 
 # Run in background
-docker-compose up -d
+docker compose up -d
 
 # View logs
-docker-compose logs -f vulnyoga
+docker compose logs -f vulnyoga
 
 # Or build and run manually
 docker build -t vulnyoga .
@@ -97,40 +97,6 @@ docker run -p 3000:3000 vulnyoga
 ### Interactive Documentation
 - **Swagger UI**: `http://localhost:3000/api-docs`
 - **OpenAPI Spec**: `http://localhost:3000/openapi.yaml`
-
-### Key Endpoints
-
-#### Authentication
-- `POST /api/v1/auth/register` - Register new user
-- `POST /api/v1/auth/login` - User login
-- `POST /api/v1/auth/reset` - Password reset
-
-#### Users
-- `GET /api/v1/users/:id` - Get user profile
-- `PUT /api/v1/users/:id` - Update user profile
-- `DELETE /api/v1/users/:id` - Delete user
-
-#### Items (Inventory)
-- `GET /api/v1/items` - List all items
-- `GET /api/v1/items/:id` - Get item details
-- `POST /api/v1/items` - Create new item
-- `PUT /api/v1/items/:id` - Update item
-- `DELETE /api/v1/items/:id` - Delete item
-
-#### Orders
-- `GET /api/v1/orders` - List orders
-- `GET /api/v1/orders/:id` - Get order details
-- `POST /api/v1/orders` - Create order
-- `PUT /api/v1/orders/:id` - Update order status
-
-#### Admin
-- `GET /api/v1/admin/users` - List all users
-- `GET /api/v1/admin/analytics` - Get analytics
-- `POST /api/v1/admin/backup` - Create backup
-
-#### SSRF Testing
-- `GET /api/v1/ssrf/fetch` - Fetch external URLs
-- `POST /api/v1/ssrf/webhook` - Webhook endpoint
 
 ## 🔧 Configuration
 
@@ -184,9 +150,7 @@ curl "http://localhost:3000/api/v1/users/1?token=<token>"
 ### API7 - SSRF
 ```bash
 # Fetch internal service
-curl -X POST http://localhost:3000/api/v1/ssrf/fetch \
-  -H "Content-Type: application/json" \
-  -d '{"url": "http://localhost:8080/admin"}'
+curl -X GET http://localhost:3000/api/v1/image/proxy?url=http://169.254.169.254/latest/meta-data
 ```
 
 ## 📁 Project Structure
@@ -232,14 +196,6 @@ npm run test:coverage
 The application uses Winston for logging. Logs are written to:
 - Console (development)
 - `logs/` directory (production)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new vulnerabilities
-5. Submit a pull request
 
 ## 📄 License
 
