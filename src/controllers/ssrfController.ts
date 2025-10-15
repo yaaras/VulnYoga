@@ -6,12 +6,26 @@ import fetch from 'node-fetch';
 
 export const proxyImage = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { url } = req.query as any;
+    const { url, headers } = req.query as any;
     const requestingUser = (req as AuthenticatedRequest).user;
 
     if (!url) {
       res.status(400).json({ error: 'URL parameter required' });
       return;
+    }
+
+    // Parse custom headers if provided
+    let customHeaders = {};
+    if (headers) {
+      try {
+        let headersString = typeof headers === 'string' ? headers : JSON.stringify(headers);
+        // Decode URL encoding if present
+        headersString = decodeURIComponent(headersString);
+        customHeaders = JSON.parse(headersString);
+      } catch (error) {
+        res.status(400).json({ error: 'Invalid headers format. Must be valid JSON.' });
+        return;
+      }
     }
 
     // VULN_API7_SSRF: Server-Side Request Forgery
@@ -20,7 +34,8 @@ export const proxyImage = async (req: Request, res: Response): Promise<void> => 
       try {
         const response = await fetch(url, {
           method: 'GET',
-          redirect: 'follow' // Follow redirects (dangerous)
+          redirect: 'follow',
+          headers: customHeaders
         } as any);
 
         if (!response.ok) {
@@ -51,60 +66,16 @@ export const proxyImage = async (req: Request, res: Response): Promise<void> => 
         res.status(500).json({ error: 'Failed to proxy image' });
       }
     } else {
-      // Secure: Implement URL allowlist and validation
-      const allowedDomains = [
-        'images.unsplash.com',
-        'picsum.photos',
-        'via.placeholder.com',
-        'httpbin.org'
-      ];
 
-      const urlObj = new URL(url);
-      const isAllowed = allowedDomains.some(domain => 
-        urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain)
-      );
-
-      if (!isAllowed) {
-        res.status(403).json({ error: 'Domain not allowed' });
-        return;
       }
 
-      // Additional security checks
-      const blockedProtocols = ['file:', 'gopher:', 'ftp:', 'dict:'];
-      const isBlockedProtocol = blockedProtocols.some(protocol => 
-        url.toLowerCase().startsWith(protocol)
-      );
 
-      if (isBlockedProtocol) {
-        res.status(403).json({ error: 'Protocol not allowed' });
-        return;
-      }
-
-      // Check for internal IP addresses
-      const internalIPs = [
-        '127.0.0.1', 'localhost', '::1',
-        '169.254.169.254', // AWS metadata
-        '169.254.170.2',   // ECS metadata
-        '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'
-      ];
-
-      const isInternalIP = internalIPs.some(ip => {
-        if (ip.includes('/')) {
-          // CIDR notation - simplified check
-          return urlObj.hostname.startsWith(ip.split('/')[0]);
-        }
-        return urlObj.hostname === ip;
-      });
-
-      if (isInternalIP) {
-        res.status(403).json({ error: 'Internal IP not allowed' });
-        return;
-      }
 
       try {
         const response = await fetch(url, {
           method: 'GET',
-          redirect: 'manual' // Don't follow redirects
+          redirect: 'manual', 
+          headers: customHeaders
         } as any);
 
         if (!response.ok) {
