@@ -1,6 +1,8 @@
 services:
   vulnyoga:
-    image: yaara1/vulnyoga:latest
+    build: 
+      context: .
+      dockerfile: Dockerfile
     container_name: vulnyoga-api
     ports:
       - "0.0.0.0:3000:3000"
@@ -35,6 +37,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+
 
 volumes:
   vulnyoga-db:
