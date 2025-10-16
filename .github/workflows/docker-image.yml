@@ -1,16 +1,27 @@
-name: Docker Image CI
+name: Publish Docker image
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ] # Trigger on pushes to the main branch
 
 jobs:
-
-  build:
-
+  build-and-push:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag yaara1/vulnyoga:$(date +%s)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: . 
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/vulnyoga:latest
+            ${{ secrets.DOCKER_USERNAME }}/vulnyoga:${{ github.sha }}
