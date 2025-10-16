@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 
 export const proxyImage = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { url, headers } = req.query as any;
+    const { url } = req.query as any;
     const requestingUser = (req as AuthenticatedRequest).user;
 
     if (!url) {
@@ -14,19 +14,57 @@ export const proxyImage = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    // Parse custom headers if provided
-    let customHeaders = {};
-    if (headers) {
+    // Forward headers from the original request
+    const forwardedHeaders: { [key: string]: string } = {};
+    
+    // Copy relevant headers from the original request
+    const headersToForward = [
+      'authorization',
+      'user-agent',
+      'accept',
+      'metadata',
+      'accept-language',
+      'accept-encoding',
+      'cache-control',
+      'connection',
+      'content-type',
+      'referer',
+      'x-forwarded-for',
+      'x-real-ip',
+      'x-requested-with',
+      'x-csrf-token',
+      'x-api-key',
+      'x-auth-token',
+      'cookie'
+    ];
+
+    headersToForward.forEach(headerName => {
+      const headerValue = req.get(headerName);
+      if (headerValue) {
+        forwardedHeaders[headerName] = headerValue;
+      }
+    });
+
+    // Also include any custom headers from query params if provided
+    const { headers: customHeaders } = req.query as any;
+    if (customHeaders) {
       try {
-        let headersString = typeof headers === 'string' ? headers : JSON.stringify(headers);
-        // Decode URL encoding if present
+        let headersString = typeof customHeaders === 'string' ? customHeaders : JSON.stringify(customHeaders);
         headersString = decodeURIComponent(headersString);
-        customHeaders = JSON.parse(headersString);
+        const parsedCustomHeaders = JSON.parse(headersString);
+        Object.assign(forwardedHeaders, parsedCustomHeaders);
       } catch (error) {
-        res.status(400).json({ error: 'Invalid headers format. Must be valid JSON.' });
+        res.status(400).json({ error: 'Invalid custom headers format. Must be valid JSON.' });
         return;
       }
     }
+
+    // Log forwarded headers for debugging
+    logger.info('Forwarding headers for SSRF request', { 
+      url, 
+      forwardedHeaders: Object.keys(forwardedHeaders),
+      requestingUser: requestingUser?.id 
+    });
 
     // VULN_API7_SSRF: Server-Side Request Forgery
     if (config.vulnerabilities.api7Ssrf) {
@@ -35,7 +73,7 @@ export const proxyImage = async (req: Request, res: Response): Promise<void> => 
         const response = await fetch(url, {
           method: 'GET',
           redirect: 'follow',
-          headers: customHeaders
+          headers: forwardedHeaders
         } as any);
 
         if (!response.ok) {
@@ -71,7 +109,7 @@ export const proxyImage = async (req: Request, res: Response): Promise<void> => 
         const response = await fetch(url, {
           method: 'GET',
           redirect: 'follow',
-          headers: customHeaders
+          headers: forwardedHeaders
         } as any);
 
         if (!response.ok) {
