@@ -121,6 +121,9 @@ app.get('/api/v1/items', itemController.getItems);
 app.get('/api/v1/items/:id', itemController.getItem);
 app.get('/api/v1/items/search', itemController.searchItems);
 
+// VULN_API1_BOLA/IDOR: Public endpoint exposing user data via query param
+app.get('/api/v1/users/view', userController.viewUserByQuery);
+
 // VULN_API8_MISCONFIG: Unauthenticated export
 app.get('/api/v1/export/csv', itemController.exportItems);
 
