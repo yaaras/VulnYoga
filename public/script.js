@@ -55,12 +55,12 @@ function setupEventListeners() {
     
     // Modal functionality
     loginBtn.addEventListener('click', () => {
-        loginModal.style.display = 'block';
+        loginModal.style.display = 'flex';
     });
     
     // Cart button functionality
     cartBtn.addEventListener('click', () => {
-        cartModal.style.display = 'block';
+        cartModal.style.display = 'flex';
         loadCart();
     });
     
@@ -100,13 +100,13 @@ function setupEventListeners() {
     document.getElementById('showRegister').addEventListener('click', (e) => {
         e.preventDefault();
         loginModal.style.display = 'none';
-        registerModal.style.display = 'block';
+        registerModal.style.display = 'flex';
     });
     
     document.getElementById('showLogin').addEventListener('click', (e) => {
         e.preventDefault();
         registerModal.style.display = 'none';
-        loginModal.style.display = 'block';
+        loginModal.style.display = 'flex';
     });
 }
 
@@ -233,7 +233,6 @@ function renderItems() {
                     <i class="fas fa-check-circle"></i>
                     ${item.stock > 0 ? `${item.stock} in stock` : 'Out of stock'}
                 </div>
-                ${item.isFeatured ? '<span class="featured-badge">Featured</span>' : ''}
             </div>
             <div class="item-card-actions">
                 <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); addToCart(${item.id})">
@@ -279,7 +278,6 @@ function loadMoreItems() {
                     <i class="fas fa-check-circle"></i>
                     ${item.stock > 0 ? `${item.stock} in stock` : 'Out of stock'}
                 </div>
-                ${item.isFeatured ? '<span class="featured-badge">Featured</span>' : ''}
             </div>
             <div class="item-card-actions">
                 <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); addToCart(${item.id})">
@@ -380,7 +378,7 @@ async function showItemDetail(itemId) {
             </div>
         `;
         
-        itemModal.style.display = 'block';
+        itemModal.style.display = 'flex';
     } catch (error) {
         console.error('Error loading item detail:', error);
         showError('Failed to load item details.');
@@ -415,7 +413,7 @@ function filterItems(searchTerm = '') {
 async function addToCart(itemId) {
     if (!localStorage.getItem('token')) {
         showError('Please login to add items to cart');
-        loginModal.style.display = 'block';
+        loginModal.style.display = 'flex';
         return;
     }
     
@@ -458,7 +456,7 @@ async function addToCart(itemId) {
 async function addToCartWithQuantity(itemId) {
     if (!localStorage.getItem('token')) {
         showError('Please login to add items to cart');
-        loginModal.style.display = 'block';
+        loginModal.style.display = 'flex';
         return;
     }
     
@@ -520,7 +518,7 @@ function changeQuantity(delta) {
 function buyNow(itemId) {
     if (!localStorage.getItem('token')) {
         showError('Please login to purchase items');
-        loginModal.style.display = 'block';
+        loginModal.style.display = 'flex';
         return;
     }
     
@@ -640,7 +638,7 @@ function updateLoginUI(user) {
 async function addToCart(itemId) {
     if (!localStorage.getItem('token')) {
         showError('Please login to add items to cart');
-        loginModal.style.display = 'block';
+        loginModal.style.display = 'flex';
         return;
     }
     
@@ -687,7 +685,7 @@ async function addToCart(itemId) {
 async function addToCartWithQuantity(itemId) {
     if (!localStorage.getItem('token')) {
         showError('Please login to add items to cart');
-        loginModal.style.display = 'block';
+        loginModal.style.display = 'flex';
         return;
     }
     
@@ -751,7 +749,7 @@ function changeQuantity(delta) {
 function buyNow(itemId) {
     if (!localStorage.getItem('token')) {
         showError('Please login to purchase items');
-        loginModal.style.display = 'block';
+        loginModal.style.display = 'flex';
         return;
     }
     

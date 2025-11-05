@@ -56,7 +56,16 @@ async function main() {
   const items = await Promise.all([
     prisma.item.upsert({
       where: { id: 1 },
-      update: {},
+      update: {
+        name: 'Premium Yoga Mat',
+        description: 'High-quality non-slip yoga mat perfect for all types of yoga practice',
+        price: 49.99,
+        costPrice: 25.00,
+        supplierEmail: 'mats@yogasupplier.com',
+        stock: 50,
+        imageUrl: 'https://picsum.photos/400/300?random=1',
+        isFeatured: true,
+      },
       create: {
         name: 'Premium Yoga Mat',
         description: 'High-quality non-slip yoga mat perfect for all types of yoga practice',
@@ -71,7 +80,16 @@ async function main() {
     }),
     prisma.item.upsert({
       where: { id: 2 },
-      update: {},
+      update: {
+        name: 'Yoga Blocks Set',
+        description: 'Set of 2 high-density foam yoga blocks for support and alignment',
+        price: 19.99,
+        costPrice: 8.00,
+        supplierEmail: 'blocks@yogasupplier.com',
+        stock: 100,
+        imageUrl: 'https://picsum.photos/400/300?random=2',
+        isFeatured: false,
+      },
       create: {
         name: 'Yoga Blocks Set',
         description: 'Set of 2 high-density foam yoga blocks for support and alignment',
@@ -86,7 +104,16 @@ async function main() {
     }),
     prisma.item.upsert({
       where: { id: 3 },
-      update: {},
+      update: {
+        name: 'Yoga Strap',
+        description: 'Cotton yoga strap for stretching and improving flexibility',
+        price: 12.99,
+        costPrice: 5.00,
+        supplierEmail: 'straps@yogasupplier.com',
+        stock: 75,
+        imageUrl: 'https://picsum.photos/400/300?random=3',
+        isFeatured: false,
+      },
       create: {
         name: 'Yoga Strap',
         description: 'Cotton yoga strap for stretching and improving flexibility',
@@ -101,7 +128,16 @@ async function main() {
     }),
     prisma.item.upsert({
       where: { id: 4 },
-      update: {},
+      update: {
+        name: 'Meditation Cushion',
+        description: 'Comfortable meditation cushion for seated practice',
+        price: 34.99,
+        costPrice: 15.00,
+        supplierEmail: 'cushions@yogasupplier.com',
+        stock: 30,
+        imageUrl: 'https://picsum.photos/400/300?random=4',
+        isFeatured: true,
+      },
       create: {
         name: 'Meditation Cushion',
         description: 'Comfortable meditation cushion for seated practice',
@@ -116,7 +152,16 @@ async function main() {
     }),
     prisma.item.upsert({
       where: { id: 5 },
-      update: {},
+      update: {
+        name: 'Yoga Towel',
+        description: 'Absorbent yoga towel for hot yoga and intense sessions',
+        price: 24.99,
+        costPrice: 10.00,
+        supplierEmail: 'towels@yogasupplier.com',
+        stock: 60,
+        imageUrl: 'https://picsum.photos/400/300?random=5',
+        isFeatured: false,
+      },
       create: {
         name: 'Yoga Towel',
         description: 'Absorbent yoga towel for hot yoga and intense sessions',
@@ -131,7 +176,16 @@ async function main() {
     }),
     prisma.item.upsert({
       where: { id: 6 },
-      update: {},
+      update: {
+        name: 'Online Yoga Class - Beginner',
+        description: '4-week beginner yoga course with video lessons',
+        price: 79.99,
+        costPrice: 20.00,
+        supplierEmail: 'classes@yogainstructor.com',
+        stock: 999,
+        imageUrl: 'https://picsum.photos/400/300?random=6',
+        isFeatured: true,
+      },
       create: {
         name: 'Online Yoga Class - Beginner',
         description: '4-week beginner yoga course with video lessons',
@@ -146,7 +200,16 @@ async function main() {
     }),
     prisma.item.upsert({
       where: { id: 7 },
-      update: {},
+      update: {
+        name: 'Yoga Bag',
+        description: 'Spacious yoga bag with compartments for all your gear',
+        price: 39.99,
+        costPrice: 18.00,
+        supplierEmail: 'bags@yogasupplier.com',
+        stock: 40,
+        imageUrl: 'https://picsum.photos/400/300?random=7',
+        isFeatured: false,
+      },
       create: {
         name: 'Yoga Bag',
         description: 'Spacious yoga bag with compartments for all your gear',
@@ -161,7 +224,16 @@ async function main() {
     }),
     prisma.item.upsert({
       where: { id: 8 },
-      update: {},
+      update: {
+        name: 'Yoga Wheel',
+        description: 'Yoga wheel for back bending and stretching exercises',
+        price: 29.99,
+        costPrice: 12.00,
+        supplierEmail: 'wheels@yogasupplier.com',
+        stock: 25,
+        imageUrl: 'https://picsum.photos/400/300?random=8',
+        isFeatured: false,
+      },
       create: {
         name: 'Yoga Wheel',
         description: 'Yoga wheel for back bending and stretching exercises',
@@ -176,7 +248,16 @@ async function main() {
     }),
     prisma.item.upsert({
       where: { id: 9 },
-      update: {},
+      update: {
+        name: 'Essential Oils Set',
+        description: 'Set of 5 essential oils for aromatherapy during yoga',
+        price: 44.99,
+        costPrice: 22.00,
+        supplierEmail: 'oils@aromatherapy.com',
+        stock: 35,
+        imageUrl: 'https://picsum.photos/400/300?random=9',
+        isFeatured: false,
+      },
       create: {
         name: 'Essential Oils Set',
         description: 'Set of 5 essential oils for aromatherapy during yoga',
@@ -191,7 +272,16 @@ async function main() {
     }),
     prisma.item.upsert({
       where: { id: 10 },
-      update: {},
+      update: {
+        name: 'Yoga Journal',
+        description: 'Beautiful journal for tracking your yoga journey',
+        price: 16.99,
+        costPrice: 7.00,
+        supplierEmail: 'journals@yogasupplier.com',
+        stock: 80,
+        imageUrl: 'https://picsum.photos/400/300?random=10',
+        isFeatured: false,
+      },
       create: {
         name: 'Yoga Journal',
         description: 'Beautiful journal for tracking your yoga journey',
@@ -206,7 +296,16 @@ async function main() {
     }),
     prisma.item.upsert({
       where: { id: 11 },
-      update: {},
+      update: {
+        name: 'Online Yoga Class - Advanced',
+        description: '8-week advanced yoga course with challenging poses',
+        price: 129.99,
+        costPrice: 30.00,
+        supplierEmail: 'classes@yogainstructor.com',
+        stock: 999,
+        imageUrl: 'https://picsum.photos/400/300?random=11',
+        isFeatured: true,
+      },
       create: {
         name: 'Online Yoga Class - Advanced',
         description: '8-week advanced yoga course with challenging poses',
@@ -221,7 +320,16 @@ async function main() {
     }),
     prisma.item.upsert({
       where: { id: 12 },
-      update: {},
+      update: {
+        name: 'Yoga Socks',
+        description: 'Non-slip yoga socks for indoor practice',
+        price: 14.99,
+        costPrice: 6.00,
+        supplierEmail: 'socks@yogasupplier.com',
+        stock: 90,
+        imageUrl: 'https://picsum.photos/400/300?random=12',
+        isFeatured: false,
+      },
       create: {
         name: 'Yoga Socks',
         description: 'Non-slip yoga socks for indoor practice',
