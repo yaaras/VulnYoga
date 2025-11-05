@@ -339,3 +339,46 @@ export const consumeResetToken = async (req: Request, res: Response): Promise<vo
     res.status(500).json({ error: 'Password update failed' });
   }
 };
+
+// VULN_API1_BOLA/IDOR: Read arbitrary user via query param without proper checks
+export const viewUserByQuery = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userIdParam = req.query.userId as string | undefined;
+
+    if (!userIdParam) {
+      res.status(400).json({ error: 'userId query parameter is required' });
+      return;
+    }
+
+    const userId = parseInt(userIdParam, 10);
+    if (Number.isNaN(userId)) {
+      res.status(400).json({ error: 'userId must be a number' });
+      return;
+    }
+
+    // Vulnerable: No authentication or ownership checks; exposes sensitive fields
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        address: true,
+        phone: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true
+      }
+    });
+
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    res.json(user);
+  } catch (error) {
+    logger.error('View user by query error', { error });
+    res.status(500).json({ error: 'Failed to view user' });
+  }
+};

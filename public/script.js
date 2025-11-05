@@ -300,24 +300,36 @@ function loadMoreItems() {
     }
 }
 
-// Get appropriate icon for item type (optimized with lazy loading)
-function getItemIcon(itemName) {
+// Get appropriate icon path for item type
+function getItemIconPath(itemName) {
     const name = itemName.toLowerCase();
     let iconPath = '/public/images/yoga-mat.svg'; // Default icon
     
-    if (name.includes('mat')) iconPath = '/public/images/yoga-mat.svg';
-    else if (name.includes('block')) iconPath = '/public/images/yoga-blocks.svg';
-    else if (name.includes('strap')) iconPath = '/public/images/yoga-strap.svg';
-    else if (name.includes('cushion')) iconPath = '/public/images/meditation-cushion.svg';
-    else if (name.includes('towel')) iconPath = '/public/images/yoga-towel.svg';
-    else if (name.includes('bag')) iconPath = '/public/images/yoga-bag.svg';
-    else if (name.includes('wheel')) iconPath = '/public/images/yoga-wheel.svg';
-    else if (name.includes('oil')) iconPath = '/public/images/essential-oils.svg';
-    else if (name.includes('journal')) iconPath = '/public/images/yoga-journal.svg';
-    else if (name.includes('sock')) iconPath = '/public/images/yoga-socks.svg';
-    else if (name.includes('class') || name.includes('course')) iconPath = '/public/images/online-class.svg';
+    if (name.includes('mat')) iconPath = '/public/images/premium_yoga_mat.png';
+    else if (name.includes('block')) iconPath = '/public/images/yoga_blocks.png';
+    else if (name.includes('strap')) iconPath = '/public/images/yoga_strap.png';
+    else if (name.includes('cushion')) iconPath = '/public/images/meditation_cushion.png';
+    else if (name.includes('towel')) iconPath = '/public/images/yoga_towel.png';
+    else if (name.includes('bag')) iconPath = '/public/images/yoga_bag.png';
+    else if (name.includes('wheel')) iconPath = '/public/images/yoga_wheel.png';
+    else if (name.includes('oil')) iconPath = '/public/images/yoga_essentials_oils.png';
+    else if (name.includes('journal')) iconPath = '/public/images/yoga_journal.png';
+    else if (name.includes('sock')) iconPath = '/public/images/yoga_socks.png';
+    else if (name.includes('class') || name.includes('course')) {
+        if (name.includes('advanced')) iconPath = '/public/images/yoga_online_class_advanced.png';
+        else if (name.includes('beginner')) iconPath = '/public/images/yoga_class_beginner.png';
+        else iconPath = '/public/images/yoga_class_beginner.png'; // Default to beginner if unspecified
+    }
     
-    return `<img src="${iconPath}" alt="${name}" style="width: 60px; height: 60px;" loading="lazy">`;
+    return iconPath;
+}
+
+// Get appropriate icon for item type (optimized with lazy loading)
+function getItemIcon(itemName, size = 'small') {
+    const name = itemName.toLowerCase();
+    const iconPath = getItemIconPath(itemName);
+    
+    return `<img src="${iconPath}" alt="${name}" loading="lazy">`;
 }
 
 // Show item detail modal
@@ -334,7 +346,7 @@ async function showItemDetail(itemId) {
         
         itemDetail.innerHTML = `
             <div class="item-image">
-                ${getItemIcon(item.name)}
+                ${getItemIcon(item.name, 'large')}
             </div>
             <h2>${escapeHtml(item.name)}</h2>
             <p class="item-description">${escapeHtml(item.description)}</p>
