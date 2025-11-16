@@ -68,7 +68,9 @@ The application simulates a yoga store with user management, inventory, orders, 
    npx ts-node --transpile-only src/index.ts
    ```
 
-The API will be available at `http://localhost:3000`
+The API will be available at:
+- **Local development**: `http://localhost:3000` (or the port specified in `PORT` environment variable)
+- **Remote**: `http://<your-server-ip-or-domain>:<PORT>` (replace with your actual server address)
 
 ### Docker Deployment
 
@@ -90,13 +92,21 @@ docker build -t vulnyoga .
 docker run -p 3000:3000 vulnyoga
 ```
 
-**Note**: The service name is `vulnyoga` (not `vulnyoga-api`). Use `docker-compose logs -f vulnyoga` to view logs.
+**Note**: 
+- The service name is `vulnyoga` (not `vulnyoga-api`). Use `docker-compose logs -f vulnyoga` to view logs.
+- The application will be accessible at `http://<your-host>:3000` (or the port you map in Docker)
+- For remote deployments, ensure the port is exposed and accessible from your network
 
 ## 📚 API Documentation
 
 ### Interactive Documentation
-- **Swagger UI**: `http://localhost:3000/api-docs`
-- **OpenAPI Spec**: `http://localhost:3000/openapi.yaml`
+Once the server is running, access the documentation at:
+- **Swagger UI**: `http://<your-host>:<PORT>/api-docs`
+  - Local: `http://localhost:3000/api-docs`
+  - Remote: `http://<your-server-ip-or-domain>:<PORT>/api-docs`
+- **OpenAPI Spec**: `http://<your-host>:<PORT>/openapi.yaml`
+  - Local: `http://localhost:3000/openapi.yaml`
+  - Remote: `http://<your-server-ip-or-domain>:<PORT>/openapi.yaml`
 
 ## 🔧 Configuration
 
@@ -130,27 +140,31 @@ SAFE_MODE=true
 
 ## 🧪 Security Testing Examples
 
+Replace `<API_BASE_URL>` with your actual API endpoint:
+- Local: `http://localhost:3000`
+- Remote: `http://<your-server-ip-or-domain>:<PORT>`
+
 ### API1 - BOLA (Broken Object Level Authorization)
 ```bash
 # As user 1, try to access user 2's data
 curl -H "Authorization: Bearer <user1_token>" \
-  http://localhost:3000/api/v1/users/2
+  <API_BASE_URL>/api/v1/users/2
 ```
 
 ### API2 - Broken Authentication
 ```bash
 # Use expired token
 curl -H "Authorization: Bearer <expired_token>" \
-  http://localhost:3000/api/v1/users/1
+  <API_BASE_URL>/api/v1/users/1
 
 # Use token in query parameter
-curl "http://localhost:3000/api/v1/users/1?token=<token>"
+curl "<API_BASE_URL>/api/v1/users/1?token=<token>"
 ```
 
 ### API7 - SSRF
 ```bash
 # Fetch internal service
-curl -X GET http://localhost:3000/api/v1/image/proxy?url=http://169.254.169.254/latest/meta-data
+curl -X GET <API_BASE_URL>/api/v1/image/proxy?url=http://169.254.169.254/latest/meta-data
 ```
 
 ## 📁 Project Structure

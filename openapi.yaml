@@ -34,7 +34,16 @@ info:
 
 servers:
   - url: http://localhost:3000
-    description: Development server
+    description: Local development server
+  - url: http://{host}:{port}
+    description: Custom server (replace {host} and {port} with your server address)
+    variables:
+      host:
+        default: localhost
+        description: Server hostname or IP address
+      port:
+        default: '3000'
+        description: Server port number
 
 paths:
   /api/v1/auth/register:

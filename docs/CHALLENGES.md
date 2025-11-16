@@ -168,7 +168,7 @@ VulnYoga is intentionally vulnerable to help security professionals, developers,
 **Challenge Scenarios:**
 
 1. **Image URL Manipulation**
-   - Try to set item image URL to internal services: `http://localhost:8080/admin`
+   - Try to set item image URL to internal services (e.g., `http://localhost:8080/admin` or internal IPs)
    - **Goal:** Access internal network resources
 
 2. **Webhook Abuse**
@@ -184,6 +184,7 @@ VulnYoga is intentionally vulnerable to help security professionals, developers,
 http://localhost:8080/admin
 http://127.0.0.1:8080/internal
 http://169.254.169.254/latest/meta-data/ (AWS metadata)
+http://<internal-ip>:<port>/admin
 ```
 
 ---

@@ -27,7 +27,9 @@ npm run seed
 npm run dev
 ```
 
-The API will be available at `http://localhost:3000`
+The API will be available at:
+- **Local development**: `http://localhost:3000` (or the port specified in `PORT` environment variable)
+- **Remote**: `http://<your-server-ip-or-domain>:<PORT>` (replace with your actual server address)
 
 ## Default Credentials
 
@@ -37,9 +39,16 @@ The API will be available at `http://localhost:3000`
 
 ## API Documentation
 
-- **Swagger UI**: `http://localhost:3000/docs`
-- **Health Check**: `http://localhost:3000/healthz`
-- **Metrics**: `http://localhost:3000/metrics`
+Once the server is running, access the documentation at:
+- **Swagger UI**: `http://<your-host>:<PORT>/docs`
+  - Local: `http://localhost:3000/docs`
+  - Remote: `http://<your-server-ip-or-domain>:<PORT>/docs`
+- **Health Check**: `http://<your-host>:<PORT>/healthz`
+  - Local: `http://localhost:3000/healthz`
+  - Remote: `http://<your-server-ip-or-domain>:<PORT>/healthz`
+- **Metrics**: `http://<your-host>:<PORT>/metrics`
+  - Local: `http://localhost:3000/metrics`
+  - Remote: `http://<your-server-ip-or-domain>:<PORT>/metrics`
 
 ## OWASP API Security Top 10 (2023) Vulnerability Mapping
 
