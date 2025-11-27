@@ -134,6 +134,7 @@ export interface Config {
     api8Misconfig: boolean;
     api9Inventory: boolean;
     api10UnsafeConsump: boolean;
+    lfi: boolean;
   };
   safeMode: boolean;
 }
