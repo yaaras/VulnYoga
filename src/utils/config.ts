@@ -35,6 +35,7 @@ export const config: Config = {
     api8Misconfig: getSafeModeVulnerabilityFlag('VULN_API8_MISCONFIG'),
     api9Inventory: getSafeModeVulnerabilityFlag('VULN_API9_INVENTORY'),
     api10UnsafeConsump: getSafeModeVulnerabilityFlag('VULN_API10_UNSAFE_CONSUMP'),
+    lfi: getSafeModeVulnerabilityFlag('VULN_LFI'),
   },
   safeMode: process.env.SAFE_MODE === 'true',
 };
@@ -54,7 +55,8 @@ export function logVulnerabilityStatus(): void {
       .replace('Ssrf', '7_SSRF')
       .replace('Misconfig', '8_MISCONFIG')
       .replace('Inventory', '9_INVENTORY')
-      .replace('UnsafeConsump', '10_UNSAFE_CONSUMP');
+      .replace('UnsafeConsump', '10_UNSAFE_CONSUMP')
+      .replace('lfi', 'LFI');
     
     console.log(`${status} - ${apiNumber}`);
   });

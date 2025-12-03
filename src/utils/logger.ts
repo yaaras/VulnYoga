@@ -176,5 +176,13 @@ export const securityLogger = {
       response,
       vulnerability: 'API10_UNSAFE_CONSUMP'
     });
+  },
+  
+  lfiAttempt: (userId: number, file: string) => {
+    logger.warn('LFI attempt detected', {
+      userId,
+      file,
+      vulnerability: 'LFI'
+    });
   }
 };

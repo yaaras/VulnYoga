@@ -14,6 +14,7 @@ import * as itemController from './controllers/itemController';
 import * as orderController from './controllers/orderController';
 import * as adminController from './controllers/adminController';
 import * as ssrfController from './controllers/ssrfController';
+import * as lfiController from './controllers/lfiController';
 import * as apiKeyController from './controllers/apiKeyController';
 import * as legacyController from './controllers/legacyController';
 
@@ -130,6 +131,9 @@ app.get('/api/v1/export/csv', itemController.exportItems);
 // SSRF endpoint
 app.get('/api/v1/image/proxy', ssrfController.proxyImage);
 app.get('/api/v1/sleep', ssrfController.sleep);
+
+// LFI endpoint
+app.get('/api/v1/file/read', lfiController.readFile);
 
 // VULN_API9_INVENTORY: Legacy v0 routes
 if (config.vulnerabilities.api9Inventory) {

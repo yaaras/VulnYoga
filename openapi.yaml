@@ -594,6 +594,53 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/v1/file/read:
+    get:
+      summary: Read local file
+      x-owasp:
+        categories: ["LFI"]
+        vulnerableWhenEnv: "VULN_LFI=true"
+        description: "No path validation, allows directory traversal attacks"
+      tags: ["Utilities"]
+      parameters:
+        - name: file
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Vulnerable: No path sanitization, allows ../../etc/passwd"
+      responses:
+        '200':
+          description: File content
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/html:
+              schema:
+                type: string
+        '400':
+          description: Invalid file parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: File not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Access denied (when secure mode)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/v1/export/csv:
     get:
       summary: Export items as CSV
