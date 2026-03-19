@@ -137,6 +137,7 @@ export interface Config {
     lfi: boolean;
     sqli: boolean;
     openRedirect: boolean;
+    xss: boolean;
   };
   safeMode: boolean;
 }

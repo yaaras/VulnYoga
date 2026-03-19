@@ -38,6 +38,7 @@ export const config: Config = {
     lfi: getSafeModeVulnerabilityFlag('VULN_LFI'),
     sqli: getSafeModeVulnerabilityFlag('VULN_SQLI'),
     openRedirect: getSafeModeVulnerabilityFlag('VULN_OPEN_REDIRECT'),
+    xss: getSafeModeVulnerabilityFlag('VULN_XSS'),
   },
   safeMode: process.env.SAFE_MODE === 'true',
 };

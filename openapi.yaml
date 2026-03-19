@@ -817,6 +817,29 @@ paths:
             type: string
           description: "Vulnerable: Redirect target with no validation"
 
+  /api/v1/page/error:
+    get:
+      summary: Display error page
+      x-owasp:
+        categories: ["XSS"]
+        vulnerableWhenEnv: "VULN_XSS=true"
+        description: "Reflected XSS via error parameter rendered in HTML without sanitization"
+      tags: ["Utilities"]
+      parameters:
+        - name: error
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Vulnerable: Reflected directly in HTML response without escaping"
+      responses:
+        '200':
+          description: Error page HTML
+          content:
+            text/html:
+              schema:
+                type: string
+
   /api/v1/export/csv:
     get:
       summary: Export items as CSV

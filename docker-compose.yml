@@ -24,6 +24,7 @@ services:
       - VULN_LFI=true
       - VULN_SQLI=true
       - VULN_OPEN_REDIRECT=true
+      - VULN_XSS=true
       - SAFE_MODE=false
       - LOG_LEVEL=info
     volumes:

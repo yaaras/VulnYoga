@@ -22,6 +22,7 @@ import * as redirectController from './controllers/redirectController';
 import * as reportsController from './controllers/reportsController';
 import * as templateController from './controllers/templateController';
 import * as ssoController from './controllers/ssoController';
+import * as xssController from './controllers/xssController';
 
 const app = express();
 
@@ -150,6 +151,9 @@ app.get('/api/v1/redirect', redirectController.handleRedirect);
 app.get('/api/v1/reports/sales', reportsController.salesReport);
 app.get('/api/v1/templates/render', templateController.renderTemplate);
 app.get('/api/v1/auth/sso', ssoController.ssoCallback);
+
+// XSS endpoint
+app.get('/api/v1/page/error', xssController.errorPage);
 
 // VULN_API9_INVENTORY: Legacy v0 routes
 if (config.vulnerabilities.api9Inventory) {
