@@ -17,6 +17,12 @@ import * as ssrfController from './controllers/ssrfController';
 import * as lfiController from './controllers/lfiController';
 import * as apiKeyController from './controllers/apiKeyController';
 import * as legacyController from './controllers/legacyController';
+import * as sqliController from './controllers/sqliController';
+import * as redirectController from './controllers/redirectController';
+import * as reportsController from './controllers/reportsController';
+import * as templateController from './controllers/templateController';
+import * as ssoController from './controllers/ssoController';
+import * as xssController from './controllers/xssController';
 
 const app = express();
 
@@ -134,6 +140,20 @@ app.get('/api/v1/sleep', ssrfController.sleep);
 
 // LFI endpoint
 app.get('/api/v1/file/read', lfiController.readFile);
+
+// SQLi endpoint
+app.get('/api/v1/users/search', sqliController.searchUsers);
+
+// Open Redirect endpoint
+app.get('/api/v1/redirect', redirectController.handleRedirect);
+
+// Multi-param vulnerable endpoints (vuln param is NOT a priority keyword)
+app.get('/api/v1/reports/sales', reportsController.salesReport);
+app.get('/api/v1/templates/render', templateController.renderTemplate);
+app.get('/api/v1/auth/sso', ssoController.ssoCallback);
+
+// XSS endpoint
+app.get('/api/v1/page/error', xssController.errorPage);
 
 // VULN_API9_INVENTORY: Legacy v0 routes
 if (config.vulnerabilities.api9Inventory) {

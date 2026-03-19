@@ -641,6 +641,205 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/v1/users/search:
+    get:
+      summary: Search users by username
+      x-owasp:
+        categories: ["SQLi"]
+        vulnerableWhenEnv: "VULN_SQLI=true"
+        description: "SQL Injection via unsanitized username parameter in raw SQL query"
+      tags: ["Utilities"]
+      parameters:
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Vulnerable: Direct string concatenation in raw SQL query"
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '400':
+          description: Missing username parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/redirect:
+    get:
+      summary: Redirect to URL
+      x-owasp:
+        categories: ["OpenRedirect"]
+        vulnerableWhenEnv: "VULN_OPEN_REDIRECT=true"
+        description: "Open redirect via unvalidated url parameter"
+      tags: ["Utilities"]
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Vulnerable: No URL validation, allows redirect to any external domain"
+      responses:
+        '302':
+          description: Redirect to the specified URL
+        '400':
+          description: Missing or invalid URL parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/reports/sales:
+    get:
+      summary: Generate sales report
+      x-owasp:
+        categories: ["SQLi"]
+        vulnerableWhenEnv: "VULN_SQLI=true"
+        description: "SQL Injection via sortBy parameter in ORDER BY clause"
+      tags: ["Reports"]
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+          description: Report start date
+        - name: endDate
+          in: query
+          schema:
+            type: string
+          description: Report end date
+        - name: region
+          in: query
+          schema:
+            type: string
+          description: Filter by region
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: Filter by category
+        - name: sortBy
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Vulnerable: Injected directly into ORDER BY clause"
+      responses:
+        '200':
+          description: Sales report data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  report:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Item'
+                  filters:
+                    type: object
+
+  /api/v1/templates/render:
+    get:
+      summary: Render a UI template
+      x-owasp:
+        categories: ["LFI"]
+        vulnerableWhenEnv: "VULN_LFI=true"
+        description: "LFI via theme parameter used as file path"
+      tags: ["Utilities"]
+      parameters:
+        - name: theme
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Vulnerable: Used directly as file path without sanitization"
+        - name: lang
+          in: query
+          schema:
+            type: string
+          description: Language code
+        - name: format
+          in: query
+          schema:
+            type: string
+          description: Output format
+        - name: version
+          in: query
+          schema:
+            type: string
+          description: Template version
+        - name: widget
+          in: query
+          schema:
+            type: string
+          description: Widget identifier
+
+  /api/v1/auth/sso:
+    get:
+      summary: SSO callback handler
+      x-owasp:
+        categories: ["OpenRedirect"]
+        vulnerableWhenEnv: "VULN_OPEN_REDIRECT=true"
+        description: "Open redirect via landingPage parameter"
+      tags: ["Authentication"]
+      parameters:
+        - name: provider
+          in: query
+          schema:
+            type: string
+          description: SSO provider name
+        - name: tenantId
+          in: query
+          schema:
+            type: string
+          description: Tenant identifier
+        - name: sessionId
+          in: query
+          schema:
+            type: string
+          description: Session identifier
+        - name: landingPage
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Vulnerable: Redirect target with no validation"
+
+  /api/v1/page/error:
+    get:
+      summary: Display error page
+      x-owasp:
+        categories: ["XSS"]
+        vulnerableWhenEnv: "VULN_XSS=true"
+        description: "Reflected XSS via error parameter rendered in HTML without sanitization"
+      tags: ["Utilities"]
+      parameters:
+        - name: error
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Vulnerable: Reflected directly in HTML response without escaping"
+      responses:
+        '200':
+          description: Error page HTML
+          content:
+            text/html:
+              schema:
+                type: string
+
   /api/v1/export/csv:
     get:
       summary: Export items as CSV
