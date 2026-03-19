@@ -23,6 +23,9 @@ services:
       - VULN_API8_MISCONFIG=true
       - VULN_API9_INVENTORY=true
       - VULN_API10_UNSAFE_CONSUMP=true
+      - VULN_LFI=true
+      - VULN_SQLI=true
+      - VULN_OPEN_REDIRECT=true
       - SAFE_MODE=false
       - LOG_LEVEL=info
     volumes:

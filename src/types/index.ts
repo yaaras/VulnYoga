@@ -135,6 +135,8 @@ export interface Config {
     api9Inventory: boolean;
     api10UnsafeConsump: boolean;
     lfi: boolean;
+    sqli: boolean;
+    openRedirect: boolean;
   };
   safeMode: boolean;
 }

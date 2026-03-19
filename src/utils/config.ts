@@ -36,6 +36,8 @@ export const config: Config = {
     api9Inventory: getSafeModeVulnerabilityFlag('VULN_API9_INVENTORY'),
     api10UnsafeConsump: getSafeModeVulnerabilityFlag('VULN_API10_UNSAFE_CONSUMP'),
     lfi: getSafeModeVulnerabilityFlag('VULN_LFI'),
+    sqli: getSafeModeVulnerabilityFlag('VULN_SQLI'),
+    openRedirect: getSafeModeVulnerabilityFlag('VULN_OPEN_REDIRECT'),
   },
   safeMode: process.env.SAFE_MODE === 'true',
 };
